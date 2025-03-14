@@ -6,12 +6,14 @@ import os
 # Create your views here.
 
 def index(request):
+	prompt = "BMW e30"
 	return render(request, "image_generator/index.html", {
-		"link": generateImage("BMW e30")
+		# "link": generateImage(prompt),
+		"link": os.getenv("EXAMPLE_PHOTO"), # Ustawione statyczne zdjęcie żeby ciągle nie generować nowych fot (taniej i szybciej ;) )
+		"prompt": prompt
 	})
 
 def generateImage(prompt):
-	print(os.getenv("OPENAI_KEY"))
 	client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
 
 	response = client.images.generate(

@@ -1,10 +1,20 @@
 {% extends "main.html" %}
+{% load static %}
+
+{% block head_params %}
+
+	<link rel="stylesheet" href="{% static "image_generator/image_generator.css" %}">
+
+{% endblock head_params %}
+
+
 
 {% block title %}Generated Photo{% endblock title %}
 
 {% block content %}
 
-	<img src="{{link}}" alt="Description of the image">
+{% include "image_generator/includes/img.html" %}
+	
 	
 {% endblock content %}
 
