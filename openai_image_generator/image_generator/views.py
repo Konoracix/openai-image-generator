@@ -1,25 +1,38 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from openai import OpenAI
+from django.shortcuts import redirect
 import os
+from .forms import ImageForm
 
-# Create your views here.
+def formPage(request):
+	if request.method == "POST":
 
-def index(request):
-	prompt = "BMW e30"
-	return render(request, "image_generator/index.html", {
-		# "link": generateImage(prompt),
-		"link": os.getenv("EXAMPLE_PHOTO"), # Ustawione statyczne zdjęcie żeby ciągle nie generować nowych fot (taniej i szybciej ;) )
-		"prompt": prompt
-	})
+		form = ImageForm(request.POST)
 
-def generateImage(prompt):
+		if form.is_valid():
+			prompt = form.cleaned_data["prompt"]
+			image_size = form.cleaned_data["image_size"]
+      
+			return render(request, "image_generator/image_preview.html", {
+				"prompt": prompt,
+				"img_size": image_size,
+				"link": generateImage(prompt, image_size)
+			})
+
+	else:
+		form = ImageForm()
+		
+	return render(request, "image_generator/form.html", {"form": form})
+
+
+def generateImage(prompt, image_size = "1024x1024"):
 	client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
 
 	response = client.images.generate(
   	model="dall-e-3",
   	prompt=prompt,
-  	size="1024x1024",
+  	size=image_size,
     quality="standard",
     n=1,
 	)
