@@ -8,7 +8,7 @@ import requests
 import uuid
 import boto3
 import os
-
+from  image_generator.models import Image
 
 def formPage(request):
 	if request.method == "POST":
@@ -20,12 +20,14 @@ def formPage(request):
 			image_size = form.cleaned_data["image_size"]
 
 			generated_image_url = generateImage(prompt, image_size)
-			s3_image_url = sendImageToS3(generated_image_url)
+			s3_data = sendImageToS3(generated_image_url)
+
+			Image.objects.create(image_id=s3_data["uuid"], prompt=prompt)
 
 			return render(
 				request,
 				"image_generator/image_preview.html",
-				{"prompt": prompt, "img_size": image_size, "link": s3_image_url},
+				{"prompt": prompt, "img_size": image_size, "link": s3_data["s3_image_url"]},
 			)
 
 	else:
@@ -58,7 +60,9 @@ def sendImageToS3(image_url):
 		aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
 	)
 
-	s3_filename = f"generated_images/{str(uuid.uuid4())}.png"
+	image_uuid = str(uuid.uuid4())
+
+	s3_filename = f"generated_images/{image_uuid}.png"
 
 	s3.upload_fileobj(
 		image_data,
@@ -71,5 +75,8 @@ def sendImageToS3(image_url):
 		f"https://{os.getenv('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com/{s3_filename}"
 	)
 	
-	return s3_image_url
+	return {
+			"s3_image_url": s3_image_url,
+			"uuid": image_uuid
+		}
 
