@@ -22,7 +22,7 @@ def formPage(request):
 			generated_image_url = generateImage(prompt, image_size)
 			s3_data = sendImageToS3(generated_image_url)
 
-			Image.objects.create(image_id=s3_data["uuid"], prompt=prompt)
+			Image.objects.create(image_id=s3_data["uuid"], prompt=prompt, size=image_size)
 
 			return render(
 				request,
@@ -35,6 +35,12 @@ def formPage(request):
 
 	return render(request, "image_generator/form.html", {"form": form})
 
+def gallery(request):
+	images = Image.objects.all()	
+	for image in images:
+		image.link = generateS3Link(f"generated_images/{image.image_id}.png")
+
+	return render(request, "image_generator/gallery.html", {"images": images})
 
 def generateImage(prompt, image_size="1024x1024"):
 	client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
@@ -71,12 +77,13 @@ def sendImageToS3(image_url):
 		ExtraArgs={"ContentType": "image/png"},
 	)
 
-	s3_image_url = (
-		f"https://{os.getenv('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com/{s3_filename}"
-	)
+	s3_image_url = generateS3Link(s3_filename)
 	
 	return {
 			"s3_image_url": s3_image_url,
 			"uuid": image_uuid
 		}
+
+def generateS3Link(file_name):
+	return f"https://{os.getenv('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com/{file_name}"
 
