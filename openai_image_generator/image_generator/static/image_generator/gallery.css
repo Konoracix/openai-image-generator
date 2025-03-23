@@ -5,8 +5,8 @@ body{
 	color: white;
 	font-family: "Poppins", sans-serif;
   font-weight: 500;
-	margin: 0;
-	padding: 0;
+	/* margin: 0;
+	padding: 0; */
 }
 
 .img{
@@ -24,4 +24,9 @@ body{
 	flex-wrap: wrap;
 	justify-content: space-evenly;
 	width: 100vw;
+}
+
+h1{
+	text-align: center;
+	margin: 3%;
 }

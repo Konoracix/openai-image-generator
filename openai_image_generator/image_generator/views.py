@@ -9,6 +9,7 @@ import uuid
 import boto3
 import os
 from  image_generator.models import Image
+from itertools import chain
 
 def formPage(request):
 	if request.method == "POST":
@@ -36,11 +37,25 @@ def formPage(request):
 	return render(request, "image_generator/form.html", {"form": form})
 
 def gallery(request):
-	images = Image.objects.all()	
-	for image in images:
-		image.link = generateS3Link(f"generated_images/{image.image_id}.png")
+	images_1024x1024 = Image.objects.filter(size="1024x1024").order_by("-created_at")
+	images_1792x1024 = Image.objects.filter(size="1792x1024").order_by("-created_at")
+	images_1024x1792 = Image.objects.filter(size="1024x1792").order_by("-created_at")
 
+	images = list(chain(images_1024x1024, images_1792x1024, images_1024x1792))
+	
+	for image in images:
+		image.link = generateS3ImageLink(image.image_id)
+	print(images)
+	
 	return render(request, "image_generator/gallery.html", {"images": images})
+
+def image_preview(request, id):
+	image = Image.objects.get(image_id=id)
+	return render(
+				request,
+				"image_generator/image_preview.html",
+				{"prompt": image.prompt, "img_size": image.size, "link": generateS3ImageLink(id)},
+			)
 
 def generateImage(prompt, image_size="1024x1024"):
 	client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
@@ -77,7 +92,7 @@ def sendImageToS3(image_url):
 		ExtraArgs={"ContentType": "image/png"},
 	)
 
-	s3_image_url = generateS3Link(s3_filename)
+	s3_image_url = generateS3ImageLink(image_uuid)
 	
 	return {
 			"s3_image_url": s3_image_url,
@@ -86,4 +101,8 @@ def sendImageToS3(image_url):
 
 def generateS3Link(file_name):
 	return f"https://{os.getenv('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com/{file_name}"
+
+def generateS3ImageLink(image_id):
+
+	return f"https://{os.getenv('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com/generated_images/{image_id}.png"
 

@@ -10,11 +10,14 @@
 {% block title %}Gallery{% endblock title %}
 
 {% block content %}
+
+	<header>
+		<h1>Gallery</h1>
+	</header>
+
 	<section id="gallery">
 		{% for image in images %}
-		
-			{% include "image_generator/includes/img.html" with prompt=image.prompt link=image.link img_size=image.size %}
-
+			{% include "image_generator/includes/gallery_img.html" with prompt=image.prompt link=image.link img_size=image.size id=image.image_id %}
 		{% endfor %}
 	</section>
 {% endblock content %}
