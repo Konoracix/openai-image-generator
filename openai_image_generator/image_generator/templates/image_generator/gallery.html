@@ -20,5 +20,8 @@
 			{% include "image_generator/includes/gallery_img.html" with prompt=image.prompt link=image.link img_size=image.size id=image.image_id %}
 		{% endfor %}
 	</section>
+
+	{% include "image_generator/includes/nav_buttons.html" %}
+	
 {% endblock content %}
 

@@ -1,6 +1,13 @@
 {% extends "main.html" %}
+{% load static %}
 
 {% block title %}Create Image{% endblock title %}
+
+{% block head_params %}
+
+	<link rel="stylesheet" href="{% static "image_generator/form.css" %}">
+
+{% endblock head_params %}
 
 {% block content %}
 
@@ -9,5 +16,7 @@
 	{{ form.as_p }}
 	<input type="submit" value="Submit">
 </form>
+
+{% include "image_generator/includes/nav_buttons.html" %}
 
 {% endblock content %}

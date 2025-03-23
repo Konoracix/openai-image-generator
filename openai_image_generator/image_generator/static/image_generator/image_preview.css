@@ -17,3 +17,14 @@ p{
 	width: 100%;
 	text-align: center;
 }
+
+a{
+	text-decoration: none;
+	color: inherit;
+}
+
+#links{
+	position: absolute;
+	top: 3vh;
+	right: 3vw;
+}

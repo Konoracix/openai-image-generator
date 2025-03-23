@@ -45,7 +45,6 @@ def gallery(request):
 	
 	for image in images:
 		image.link = generateS3ImageLink(image.image_id)
-	print(images)
 	
 	return render(request, "image_generator/gallery.html", {"images": images})
 

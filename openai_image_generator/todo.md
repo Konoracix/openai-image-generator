@@ -1,14 +1,15 @@
 # TODO List
 
 ## 📌 Do zrobienia
-- [ ] Dodać Przyciski które pozwolą się łatwo przemieszczać pomiędzy podstronami	
 - [ ] Dodać Przycisk do usunięcia zdjęcia
-- [ ] Dodać css'a do formularza
+- [ ] Dodać error handling do czegokolwiek xd (jak wpiszesz niecenzuralnego prompta)
 - [ ] Dodać loading screen
 - [ ] Dodać 404 page
 - [ ] Dodać feature edytowania zdjęć 😯
 
 ## ✅ Zrobione
+- [X] Dodać css'a do formularza
+- [X] Dodać Przyciski które pozwolą się łatwo przemieszczać pomiędzy podstronami	
 - [X] Uzupełnienie wyglądu galleri (Jakieś tytuł u góry / paddingi etc.)
 - [X] Dodać linki pod zdjęcia w galleri do podglądu image_preview
 - [X] Dodać sortowanie po rozmiarze do galleri (najpierw 1024x1024 a potem większe)	
