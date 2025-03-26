@@ -28,7 +28,7 @@ def formPage(request):
 			return render(
 				request,
 				"image_generator/image_preview.html",
-				{"prompt": prompt, "img_size": image_size, "link": s3_data["s3_image_url"]},
+				{"prompt": prompt, "img_size": image_size, "link": s3_data["s3_image_url"], "id": s3_data["uuid"]},
 			)
 
 	else:
@@ -53,7 +53,7 @@ def image_preview(request, id):
 	return render(
 				request,
 				"image_generator/image_preview.html",
-				{"prompt": image.prompt, "img_size": image.size, "link": generateS3ImageLink(id)},
+				{"prompt": image.prompt, "img_size": image.size, "link": generateS3ImageLink(id), "id":	id},
 			)
 
 def generateImage(prompt, image_size="1024x1024"):
@@ -105,3 +105,19 @@ def generateS3ImageLink(image_id):
 
 	return f"https://{os.getenv('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com/generated_images/{image_id}.png"
 
+
+def delete_image(request, id):
+	s3 = boto3.client(
+		"s3",
+		aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+		aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+	)
+
+	s3.delete_object(
+		Bucket=os.getenv("AWS_STORAGE_BUCKET_NAME"),
+		Key=f"generated_images/{id}.png",
+	)
+
+	Image.objects.get(image_id=id).delete()
+
+	return gallery(request)

@@ -4,6 +4,7 @@
 {% block head_params %}
 
 	<link rel="stylesheet" href="{% static "image_generator/image_preview.css" %}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=delete" />
 
 {% endblock head_params %}
 
@@ -14,7 +15,12 @@
 {% block content %}
 
 {% include "image_generator/includes/img.html" %}
-	
+<a href="{% url "image_delete" id %}">
+	<span id="delete-button" class="material-symbols-outlined">
+		delete
+	</span>
+</a>
+
 {% include "image_generator/includes/nav_buttons.html" %}
 
 {% endblock content %}

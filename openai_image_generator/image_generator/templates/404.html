@@ -1,0 +1,47 @@
+{% extends "main.html" %}
+
+{% load static %}
+
+{% block title %}Not Found{% endblock title %}
+
+{% block content %}
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+	body{
+		background-color: rgb(21, 21, 21);
+		color: white;
+		font-family: "Poppins", sans-serif;
+  	font-weight: 500;
+	}
+
+	h1{
+		text-align: center;
+	}
+	ul{
+		padding-left: 40vw;
+	}
+	
+	a{
+		text-decoration: none;
+		color: white
+	}
+
+</style>
+
+<h1>Not Found!!!</h1>
+<ul>
+	<a href="{% url "create_image_form" %}">
+	<li>
+			<h2>Generate Image</h2>
+		</li>
+	</a>
+	<a href="{% url "gallery" %}">
+	<li>
+			<h2>Gallery</h2>
+		</li>
+	</a>
+</ul>
+
+{% endblock content %}
+

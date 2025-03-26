@@ -1,13 +1,13 @@
 # TODO List
 
 ## 📌 Do zrobienia
-- [ ] Dodać Przycisk do usunięcia zdjęcia
 - [ ] Dodać error handling do czegokolwiek xd (jak wpiszesz niecenzuralnego prompta)
 - [ ] Dodać loading screen
-- [ ] Dodać 404 page
 - [ ] Dodać feature edytowania zdjęć 😯
 
 ## ✅ Zrobione
+- [X] Dodać 404 page
+- [X] Dodać Przycisk do usunięcia zdjęcia
 - [X] Dodać css'a do formularza
 - [X] Dodać Przyciski które pozwolą się łatwo przemieszczać pomiędzy podstronami	
 - [X] Uzupełnienie wyglądu galleri (Jakieś tytuł u góry / paddingi etc.)

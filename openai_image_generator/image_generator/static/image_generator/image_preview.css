@@ -28,3 +28,9 @@ a{
 	top: 3vh;
 	right: 3vw;
 }
+
+#delete-button{
+	position: absolute;
+	font-size: 2vw;
+	top: 2vh;
+}
