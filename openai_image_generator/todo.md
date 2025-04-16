@@ -1,6 +1,7 @@
 # TODO List
 
 ## 📌 Do zrobienia
+- [ ] Dodać readme
 - [ ] Dodać error handling do czegokolwiek xd (jak wpiszesz niecenzuralnego prompta)
 - [ ] Dodać loading screen
 - [ ] Dodać feature edytowania zdjęć 😯
