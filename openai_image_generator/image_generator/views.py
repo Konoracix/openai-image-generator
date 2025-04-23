@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from openai import OpenAI
 from django.shortcuts import redirect
 from io import BytesIO
@@ -23,7 +23,7 @@ def formPage(request):
 			generated_image_url = generateImage(prompt, image_size)
 			s3_data = sendImageToS3(generated_image_url)
 
-			Image.objects.create(image_id=s3_data["uuid"], prompt=prompt, size=image_size)
+			Image.objects.create(image_id=s3_data["uuid"], prompt=prompt, size=image_size, embedding=create_embedding(prompt))
 
 			return render(
 				request,
@@ -121,3 +121,19 @@ def delete_image(request, id):
 	Image.objects.get(image_id=id).delete()
 
 	return gallery(request)
+
+def generate_embeddings(request):
+	images = Image.objects.all();
+	
+	for image in images:
+		image.embedding = create_embedding(image.prompt)
+		image.save()
+	return JsonResponse({"message": "Embeddings genereted"})
+
+def create_embedding(data):
+	client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
+	embedding = client.embeddings.create(
+    input=data,
+    model="text-embedding-ada-002"
+  ) 
+	return embedding.data[0].embedding
