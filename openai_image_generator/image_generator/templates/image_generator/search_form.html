@@ -1,0 +1,22 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block title %}Search Images{% endblock title %}
+
+{% block head_params %}
+
+	<link rel="stylesheet" href="{% static "image_generator/search_form.css" %}">
+
+{% endblock head_params %}
+
+{% block content %}
+
+<form method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="Submit">
+</form>
+
+{% include "image_generator/includes/nav_buttons.html" %}
+
+{% endblock content %}

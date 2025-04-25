@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from openai import OpenAI
 from django.shortcuts import redirect
 from io import BytesIO
-from .forms import ImageForm
+from .forms import ImageForm, SearchForm
 import requests
 import uuid
 import boto3
@@ -154,13 +154,20 @@ def search_images(images, search_prompt):
 			})
 	return searched_images
 	
-
-def test(request):
-	images = Image.objects.all()
-	search_prompt = "Kostka rubika"
-	return render(request, "image_generator/gallery.html", {"images": search_images(images, search_prompt), "Title": ("Search: "+search_prompt)})
-	# return JsonResponse({"images": search_images(images, "butelka")})
-
 def compare_embeddings(emb1, emb2):
 	return cosine_similarity(np.array(emb1).reshape(1, -1), np.array(emb2).reshape(1, -1))[0][0]
 
+
+def search_form(request):
+	if request.method == "POST":
+
+		form = SearchForm(request.POST)
+
+		if form.is_valid():
+			search_prompt = form.cleaned_data["search_prompt"]
+			images = Image.objects.all()
+			return render(request, "image_generator/gallery.html", {"images": search_images(images, search_prompt), "Title": ("Search: "+search_prompt)})
+
+	else:
+		form = SearchForm()
+	return render(request, "image_generator/search_form.html", {"form": form})

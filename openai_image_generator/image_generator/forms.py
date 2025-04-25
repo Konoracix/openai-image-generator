@@ -7,3 +7,6 @@ class ImageForm(forms.Form):
 			choices=[("1024x1024", "1024x1024"), ("1792x1024", "1792x1024"), ("1024x1792", "1024x1792")],
       widget=forms.Select(attrs={'class': 'form-select'})
     )
+    
+class SearchForm(forms.Form):
+    search_prompt = forms.CharField(label="Search Prompt", max_length=4000, widget=forms.TextInput(attrs={'class': 'form-control'}))
