@@ -8,8 +8,11 @@ import requests
 import uuid
 import boto3
 import os
+import numpy as np
 from  image_generator.models import Image
 from itertools import chain
+import json
+from sklearn.metrics.pairwise import cosine_similarity
 
 def formPage(request):
 	if request.method == "POST":
@@ -46,7 +49,7 @@ def gallery(request):
 	for image in images:
 		image.link = generateS3ImageLink(image.image_id)
 	
-	return render(request, "image_generator/gallery.html", {"images": images})
+	return render(request, "image_generator/gallery.html", {"images": images, "Title": "Gallery"})
 
 def image_preview(request, id):
 	image = Image.objects.get(image_id=id)
@@ -137,3 +140,27 @@ def create_embedding(data):
     model="text-embedding-ada-002"
   ) 
 	return embedding.data[0].embedding
+
+def search_images(images, search_prompt):
+	search_prompt_embedding = create_embedding(search_prompt)
+	searched_images = []
+	for image in images:
+		if compare_embeddings(image.embedding, search_prompt_embedding) > 0.84:
+			searched_images.append({"image_id": image.image_id,
+				"prompt": image.prompt,
+				"size": image.size,
+				"created_at": image.created_at,
+				"link": generateS3ImageLink(image.image_id)
+			})
+	return searched_images
+	
+
+def test(request):
+	images = Image.objects.all()
+	search_prompt = "Kostka rubika"
+	return render(request, "image_generator/gallery.html", {"images": search_images(images, search_prompt), "Title": ("Search: "+search_prompt)})
+	# return JsonResponse({"images": search_images(images, "butelka")})
+
+def compare_embeddings(emb1, emb2):
+	return cosine_similarity(np.array(emb1).reshape(1, -1), np.array(emb2).reshape(1, -1))[0][0]
+
